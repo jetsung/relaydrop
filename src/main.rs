@@ -14,6 +14,7 @@ mod relay;
 use std::time::Duration;
 
 use clap::{Parser, Subcommand};
+use rustls::crypto::ring;
 
 #[derive(Parser)]
 #[command(name = "relaydrop", version, about = "Minimal encrypted file relay over WebSocket/TLS, written in Rust")]
@@ -27,8 +28,8 @@ enum Cmd {
     /// Run the relay server. Listen on a local port; TLS may be terminated by a
     /// reverse proxy in front of it.
     Relay {
-        /// Listen address, e.g. 127.0.0.1:9009
-        #[arg(long, default_value = "127.0.0.1:9009", env = "RELAYDROP_LISTEN")]
+        /// Listen address, e.g. 127.0.0.1:9090
+        #[arg(long, default_value = "127.0.0.1:9090", env = "RELAYDROP_LISTEN")]
         listen: String,
         /// Relay password (shared with clients via --password)
         #[arg(long, default_value = "", env = "RELAYDROP_PASSWORD")]
@@ -76,6 +77,12 @@ enum Cmd {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // rustls 0.23 no longer auto-installs a CryptoProvider from crate features;
+    // install the `ring` provider explicitly before any TLS connection is made.
+    ring::default_provider()
+        .install_default()
+        .expect("failed to install rustls ring crypto provider");
+
     let cli = Cli::parse();
     match cli.cmd {
         Cmd::Relay {

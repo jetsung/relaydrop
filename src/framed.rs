@@ -249,7 +249,7 @@ pub async fn connect_client(relay_url: &str) -> anyhow::Result<Box<dyn FramedStr
     // 归一化协议头：
     // - 已带 tcp:// / ws:// / wss:// 的原样保留；
     // - 含 "://" 但非上述三种（如 http://）视为未知 scheme，直接报错；
-    // - 其余（裸 host:port）按 tcp:// 处理，方便只写 `127.0.0.1:9009`。
+    // - 其余（裸 host:port）按 tcp:// 处理，方便只写 `127.0.0.1:9090`。
     let relay_url: String = if relay_url.starts_with("tcp://")
         || relay_url.starts_with("ws://")
         || relay_url.starts_with("wss://")

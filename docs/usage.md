@@ -31,6 +31,8 @@
 
 **优先级**：显式命令行参数 **>** 环境变量 **>** 默认值。
 
+> 环境变量与 Docker 用法（含镜像列表、容器运行示例）的单一事实来源在 [docker.md](docker.md)，以该页为准。
+
 ```bash
 # 例：用环境变量提供中继口令，命令行只写必要项
 export RELAYDROP_PASSWORD=SECRET
@@ -103,25 +105,25 @@ relaydrop receive \
 
 | 模式 | 场景 | 示例 |
 | --- | --- | --- |
-| `tcp://` | 中继可达的裸 TCP（同内网/直连） | `tcp://192.168.1.10:9009` |
-| `ws://`  | 明文 WebSocket（直连中继，已绕过 TLS） | `ws://relay.example.com:9009/relay` |
+| `tcp://` | 中继可达的裸 TCP（同内网/直连） | `tcp://192.168.1.10:9090` |
+| `ws://`  | 明文 WebSocket（直连中继，已绕过 TLS） | `ws://relay.example.com:9090/relay` |
 | `wss://` | **经 TLS 终结的 WebSocket（生产部署）** | `wss://relay.example.com/relay` |
 
 以 `wss://` 开头会自动走加密 WebSocket（由 tokio-tungstenite + rustls 完成 TLS）。
 
-不带协议头时（例如 `--relay 192.168.1.10:9009` 或 `RELAYDROP_RELAY=127.0.0.1:9009`），客户端会自动补上 `tcp://` 再连接，因此裸 `host:port` 等价于 `tcp://host:port`。其它无法识别的协议头（如 `http://`）仍会报错，提示必须使用 `tcp://` / `ws://` / `wss://`。
+不带协议头时（例如 `--relay 192.168.1.10:9090` 或 `RELAYDROP_RELAY=127.0.0.1:9090`），客户端会自动补上 `tcp://` 再连接，因此裸 `host:port` 等价于 `tcp://host:port`。其它无法识别的协议头（如 `http://`）仍会报错，提示必须使用 `tcp://` / `ws://` / `wss://`。
 
 ## 完整示例（本机直连验证）
 
 ```bash
 # 终端 1：中继
-relaydrop relay --listen 127.0.0.1:9009 --password SECRET
+relaydrop relay --listen 127.0.0.1:9090 --password SECRET
 
 # 终端 2：接收
-relaydrop receive --relay tcp://127.0.0.1:9009 --code ABC --password SECRET --out ./dl
+relaydrop receive --relay tcp://127.0.0.1:9090 --code ABC --password SECRET --out ./dl
 
 # 终端 3：发送
-relaydrop send --relay tcp://127.0.0.1:9009 --code ABC --password SECRET --file ./photo.zip
+relaydrop send --relay tcp://127.0.0.1:9090 --code ABC --password SECRET --file ./photo.zip
 ```
 
 ## 跨网络拓扑示例（客户端与中继跨网络）
@@ -133,7 +135,7 @@ relaydrop send --relay tcp://127.0.0.1:9009 --code ABC --password SECRET --file 
 
 ```bash
 # 中继仅本地明文监听，TLS 由 nginx/cloudflared 在前端终结
-relaydrop relay --listen 127.0.0.1:9009 --password SECRET
+relaydrop relay --listen 127.0.0.1:9090 --password SECRET
 # 另起：nginx 反向代理 或 cloudflared 隧道，把 wss://relay.example.com 暴露出去
 # （部署见 docs/nginx.md / docs/cloudflared.md，前端域名指向中继）
 ```
@@ -141,7 +143,7 @@ relaydrop relay --listen 127.0.0.1:9009 --password SECRET
 **发送方（与中继同内网/可达）**：
 
 ```bash
-relaydrop send --relay tcp://127.0.0.1:9009 --password SECRET ./myfolder
+relaydrop send --relay tcp://127.0.0.1:9090 --password SECRET ./myfolder
 # 终端打印：
 #   On the other computer run:
 #     relaydrop receive --relay wss://relay.example.com --code <随机> --password SECRET --out .

@@ -7,7 +7,7 @@
 
 - 域名 `relay.example.com` 已解析到 VPS，并在 Cloudflare 设为 **Proxied（橙色云）**。
 - 已获得该域名的证书（Cloudflare Origin Certificate 或 Let's Encrypt）。
-- 中继已运行：`relaydrop relay --listen 127.0.0.1:9009 --password <RELAY_PASSWORD>`
+- 中继已运行：`relaydrop relay --listen 127.0.0.1:9090 --password <RELAY_PASSWORD>`
 
 ## 完整配置
 
@@ -35,7 +35,7 @@ server {
 
     location /relay {
         # 关键：转发 WebSocket 升级头
-        proxy_pass http://127.0.0.1:9009;
+        proxy_pass http://127.0.0.1:9090;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;

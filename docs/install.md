@@ -27,10 +27,10 @@ TLS 终结由前端组件负责：
 中继仅监听本地：
 
 ```bash
-relaydrop relay --listen 127.0.0.1:9009 --password <RELAY_PASSWORD>
+relaydrop relay --listen 127.0.0.1:9090 --password <RELAY_PASSWORD>
 ```
 
-nginx 在 `:443` 终结 TLS，并把 `wss://relay.example.com/relay` 代理到 `http://127.0.0.1:9009`。
+nginx 在 `:443` 终结 TLS，并把 `wss://relay.example.com/relay` 代理到 `http://127.0.0.1:9090`。
 完整 nginx 配置见 [nginx.md](nginx.md)。Cloudflare 侧把 `relay.example.com` 设为橙色云（Proxied）。
 
 ## 方式二：cloudflared tunnel
@@ -38,8 +38,8 @@ nginx 在 `:443` 终结 TLS，并把 `wss://relay.example.com/relay` 代理到 `
 无需开放任何公网端口。完整配置（命名隧道 + systemd 守护）见 [cloudflared.md](cloudflared.md)。
 
 ```bash
-relaydrop relay --listen 127.0.0.1:9009 --password <RELAY_PASSWORD>
-cloudflared tunnel --url ws://127.0.0.1:9009
+relaydrop relay --listen 127.0.0.1:9090 --password <RELAY_PASSWORD>
+cloudflared tunnel --url ws://127.0.0.1:9090
 ```
 
 `cloudflared` 会分配一个 `*.trycloudflare.com` 域名（或你在 Cloudflare 配置的隧道主机名）。
@@ -51,11 +51,11 @@ cloudflared tunnel --url ws://127.0.0.1:9009
 > 下面的「443」指的是由 nginx / cloudflared 在前端持有证书并终结 TLS，中继始终明文监听**本地**端口。
 
 若 VPS 的 443 当前空闲（没有其他 Web 服务占用），可让 nginx 在该 443 上终结 TLS、把
-`wss://relay.example.com/relay` 代理到本地明文中继 `http://127.0.0.1:9009`：
+`wss://relay.example.com/relay` 代理到本地明文中继 `http://127.0.0.1:9090`：
 
 ```bash
 # 中继：仍然明文、监听本地
-relaydrop relay --listen 127.0.0.1:9009 --password <RELAY_PASSWORD>
+relaydrop relay --listen 127.0.0.1:9090 --password <RELAY_PASSWORD>
 ```
 
 ```nginx
@@ -66,7 +66,7 @@ server {
     ssl_certificate     /etc/nginx/certs/relay.example.com.pem;
     ssl_certificate_key /etc/nginx/certs/relay.example.com.key;
     location /relay {
-        proxy_pass http://127.0.0.1:9009;
+        proxy_pass http://127.0.0.1:9090;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
@@ -104,7 +104,7 @@ After=network.target
 Type=simple
 User=relaydrop
 EnvironmentFile=/etc/relaydrop/password
-ExecStart=/usr/local/bin/relaydrop relay --listen 127.0.0.1:9009 --password ${RELAYDROP_PASSWORD}
+ExecStart=/usr/local/bin/relaydrop relay --listen 127.0.0.1:9090 --password ${RELAYDROP_PASSWORD}
 Restart=on-failure
 
 [Install]
@@ -128,7 +128,7 @@ systemd 通过 `Environment=` / `EnvironmentFile=` 注入的变量会被中继�
 [Service]
 Type=simple
 User=relaydrop
-Environment=RELAYDROP_LISTEN=127.0.0.1:9009
+Environment=RELAYDROP_LISTEN=127.0.0.1:9090
 Environment=RELAYDROP_PASSWORD=SECRET
 # 也可改用 EnvironmentFile=/etc/relaydrop/env（内含 RELAYDROP_LISTEN / RELAYDROP_PASSWORD 等）
 ExecStart=/usr/local/bin/relaydrop relay
@@ -141,6 +141,6 @@ Restart=on-failure
 
 | 参数 | 默认 | 说明 |
 | --- | --- | --- |
-| `--listen` | `127.0.0.1:9009` | 监听地址（明文 ws/tcp 混用） |
+| `--listen` | `127.0.0.1:9090` | 监听地址（明文 ws/tcp 混用） |
 | `--password` | 空 | 中继口令，客户端必须一致才能鉴权通过 |
 | `--ttl` | `300` | 房间未被配对时的存活秒数，超时自动清理 |

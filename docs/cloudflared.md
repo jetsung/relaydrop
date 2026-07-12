@@ -6,7 +6,7 @@
 中继仍然是**明文**监听本地端口，TLS 在 Cloudflare 边缘终结：
 
 ```bash
-relaydrop relay --listen 127.0.0.1:9009 --password <RELAY_PASSWORD>
+relaydrop relay --listen 127.0.0.1:9090 --password <RELAY_PASSWORD>
 ```
 
 ## 两种隧道
@@ -14,7 +14,7 @@ relaydrop relay --listen 127.0.0.1:9009 --password <RELAY_PASSWORD>
 ### A. 临时隧道（快速验证，不推荐生产）
 
 ```bash
-cloudflared tunnel --url ws://127.0.0.1:9009
+cloudflared tunnel --url ws://127.0.0.1:9090
 ```
 
 `cloudflared` 会分配一个随机的 `*.trycloudflare.com` 域名（如 `https://<random>.trycloudflare.com`）。
@@ -51,7 +51,7 @@ relaydrop receive --relay wss://<random>.trycloudflare.com --code MYCODE --passw
 
    ingress:
      - hostname: relay.example.com
-       service: ws://127.0.0.1:9009
+       service: ws://127.0.0.1:9090
      - service: http_status:404
    ```
 
@@ -87,7 +87,7 @@ relaydrop receive --relay wss://<random>.trycloudflare.com --code MYCODE --passw
 
 ## 关键配置点
 
-- **`ws://` 前缀**：`ingress` 的 `service` 写成 `ws://127.0.0.1:9009`，cloudflared 会透明代理 WebSocket；
+- **`ws://` 前缀**：`ingress` 的 `service` 写成 `ws://127.0.0.1:9090`，cloudflared 会透明代理 WebSocket；
   不要写成 `http://`（虽也能升级，但 `ws://` 语义更明确）。
 - **空闲超时**：Cloudflare 对 WebSocket 约 100s 无数据会断；relaydrop 的 `WsFramed` 每 30s 发 Ping 保活，
   配对等待与长传输都不会触发空闲断开。
@@ -97,7 +97,7 @@ relaydrop receive --relay wss://<random>.trycloudflare.com --code MYCODE --passw
 ## 排错
 
 - 客户端报 `connection refused` / TLS 错误：确认域名为橙色云、隧道 `systemctl status cloudflared` 为 active。
-- 能连上但很快断开：检查 `ingress` 的 `service` 是否指向正确的本地端口（9009），以及 `proxy_read_timeout` 无需在此配置（cloudflared 默认长连接）。
+- 能连上但很快断开：检查 `ingress` 的 `service` 是否指向正确的本地端口（9090），以及 `proxy_read_timeout` 无需在此配置（cloudflared 默认长连接）。
 - 中继日志 `waiting in room` 但不 `paired`：确认发送方与接收方 `--code`/`--password` 完全一致。
 
 ## 与 nginx 方案对比
