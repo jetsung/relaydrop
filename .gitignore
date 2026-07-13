@@ -26,3 +26,4 @@ target/
 
 # macOS
 .DS_Store
+site/

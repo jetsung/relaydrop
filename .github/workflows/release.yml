@@ -1,0 +1,166 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  release:
+    types:
+      - created
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RELEASE_DIR: dist
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+            submodules: true
+      - name: Extract tag name
+        id: tag
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          echo "TAG_NAME=$TAG" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      - name: Update Rust
+        run: |
+          rustup update
+          rustc --version
+      - uses: jetsung/setup-zig@v1
+        with:
+          version: "0.16.0"
+      - name: Check zig version
+        run: |
+          zig version
+      - name: Install target for Linux
+        run: |
+          for arch in x86_64 aarch64 loongarch64; do
+            rustup target add $arch-unknown-linux-musl
+          done
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y musl-tools musl-dev
+      - name: Install cargo-zigbuild
+        run: cargo install cargo-zigbuild
+      - name: Update submodules
+        run: git submodule update --init --recursive
+      - name: Build for Linux
+        run: |
+          for arch in x86_64 aarch64 loongarch64; do
+            cargo-zigbuild zigbuild -p relaydrop --release --target $arch-unknown-linux-musl
+          done
+      - name: Create release tarballs
+        run: |
+          mkdir ${{ env.RELEASE_DIR }}
+          for arch in x86_64 aarch64 loongarch64; do
+            tar -cJf "${{ env.RELEASE_DIR }}/relaydrop-v${{ steps.tag.outputs.VERSION }}-$arch-unknown-linux-musl.tar.xz" -C target/$arch-unknown-linux-musl/release relaydrop
+          done
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
+          files: ${{ env.RELEASE_DIR }}/*.tar.xz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+            submodules: true
+      - name: Extract tag name
+        id: tag
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          echo "TAG_NAME=$TAG" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      - name: Update Rust
+        run: |
+          rustup update
+          rustc --version
+      - name: Install target for MacOS
+        run: |
+          for arch in x86_64 aarch64; do
+            rustup target add $arch-apple-darwin
+          done
+      - name: Update submodules
+        run: git submodule update --init --recursive
+      - name: Build for MacOS
+        run: |
+          for arch in x86_64 aarch64; do
+            cargo build -p relaydrop --release --target $arch-apple-darwin
+          done
+      - name: Create release tarballs
+        run: |
+          mkdir ${{ env.RELEASE_DIR }}
+          for arch in x86_64 aarch64; do
+            tar -cJf "${{ env.RELEASE_DIR }}/relaydrop-v${{ steps.tag.outputs.VERSION }}-$arch-apple-darwin.tar.xz" -C target/$arch-apple-darwin/release relaydrop
+          done
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
+          files: ${{ env.RELEASE_DIR }}/*.tar.xz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+        with:
+            submodules: true
+      - name: Extract tag name
+        id: tag
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          echo "TAG_NAME=$TAG" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      - name: Update Rust
+        run: |
+          rustup update
+          rustc --version
+      - name: Install zip utility
+        run: choco install zip -y
+        shell: powershell
+      - name: Install target for Windows
+        shell: bash
+        run: |
+          for arch in x86_64 aarch64; do
+            rustup target add $arch-pc-windows-msvc
+          done
+      - name: Update submodules
+        run: git submodule update --init --recursive
+      - name: Build for Windows
+        shell: bash
+        run: |
+          for arch in x86_64 aarch64; do
+            cargo build -p relaydrop --release --target $arch-pc-windows-msvc
+          done
+      - name: Create release zip files
+        shell: bash
+        run: |
+          mkdir "${{ env.RELEASE_DIR }}"
+          for arch in x86_64 aarch64; do
+            zip -j "${{ env.RELEASE_DIR }}/relaydrop-v${{ steps.tag.outputs.VERSION }}-$arch-pc-windows-msvc.zip" target/$arch-pc-windows-msvc/release/relaydrop.exe
+          done
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
+          files: ${{ env.RELEASE_DIR }}/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
