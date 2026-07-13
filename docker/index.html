@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://jetsung.github.io/relaydrop/docker/">
       
       
-        <link rel="prev" href="../usage/">
+        <link rel="prev" href="../env/">
       
       
         <link rel="next" href="../nginx/">
@@ -29,7 +29,7 @@
     
     
       
-        <title>环境变量与 Docker - relaydrop</title>
+        <title>Docker 部署 - relaydrop</title>
       
     
     
@@ -54,8 +54,6 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../stylesheets/extra.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -91,10 +89,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -120,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              环境变量与 Docker
+              Docker 部署
             
           </span>
         </div>
@@ -499,6 +493,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../env/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境变量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -518,7 +540,7 @@
   <span class="md-ellipsis">
     
   
-    环境变量与 Docker
+    Docker 部署
   
 
     
@@ -536,7 +558,7 @@
   <span class="md-ellipsis">
     
   
-    环境变量与 Docker
+    Docker 部署
   
 
     
@@ -562,38 +584,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        环境变量
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="环境变量">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#systemd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        systemd 集成示例
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#docker_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Docker 镜像
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Compose 部署
       
     </span>
   </a>
@@ -953,106 +958,8 @@
   
 
 
-<h1 id="docker">环境变量与 Docker 使用<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h1>
-<p>本页集中说明 relaydrop 的环境变量配置，以及如何使用 Docker 镜像运行中继（relay）、发送方（send）与接收方（receive）。</p>
-<h2 id="_1">环境变量<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p>除命令行参数外，每个参数的值也都可以通过环境变量设置。变量名为 <code>RELAYDROP_</code> 前缀 + 参数长名大写：</p>
-<table>
-<thead>
-<tr>
-<th>子命令</th>
-<th>参数</th>
-<th>环境变量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>relay</code></td>
-<td><code>--listen</code></td>
-<td><code>RELAYDROP_LISTEN</code></td>
-</tr>
-<tr>
-<td><code>relay</code></td>
-<td><code>--password</code></td>
-<td><code>RELAYDROP_PASSWORD</code></td>
-</tr>
-<tr>
-<td><code>relay</code></td>
-<td><code>--ttl</code></td>
-<td><code>RELAYDROP_TTL</code></td>
-</tr>
-<tr>
-<td><code>send</code></td>
-<td><code>--relay</code></td>
-<td><code>RELAYDROP_RELAY</code></td>
-</tr>
-<tr>
-<td><code>send</code></td>
-<td><code>--code</code></td>
-<td><code>RELAYDROP_CODE</code></td>
-</tr>
-<tr>
-<td><code>send</code></td>
-<td><code>--password</code></td>
-<td><code>RELAYDROP_PASSWORD</code></td>
-</tr>
-<tr>
-<td><code>send</code></td>
-<td>位置参数 <code>path</code></td>
-<td><code>RELAYDROP_PATH</code></td>
-</tr>
-<tr>
-<td><code>receive</code></td>
-<td><code>--relay</code></td>
-<td><code>RELAYDROP_RELAY</code></td>
-</tr>
-<tr>
-<td><code>receive</code></td>
-<td><code>--code</code></td>
-<td><code>RELAYDROP_CODE</code></td>
-</tr>
-<tr>
-<td><code>receive</code></td>
-<td><code>--password</code></td>
-<td><code>RELAYDROP_PASSWORD</code></td>
-</tr>
-<tr>
-<td><code>receive</code></td>
-<td><code>--out</code></td>
-<td><code>RELAYDROP_OUT</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>优先级</strong>：显式命令行参数 <strong>&gt;</strong> 环境变量 <strong>&gt;</strong> 默认值。</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 例：用环境变量提供中继口令，命令行只写必要项</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RELAYDROP_PASSWORD</span><span class="o">=</span>SECRET
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RELAYDROP_RELAY</span><span class="o">=</span>wss://relay.example.com
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--code<span class="w"> </span>MYCODE<span class="w"> </span>./big.iso<span class="w">        </span><span class="c1"># 自动读 RELAYDROP_PASSWORD / RELAYDROP_RELAY</span>
-</span></code></pre></div>
-<ul>
-<li>命令行上显式写的参数永远覆盖同名环境变量；两者都未给时才用默认值（或 <code>send</code> 的「省略 <code>--code</code> 则随机生成」）。</li>
-<li>若环境里残留 <code>RELAYDROP_CODE</code>，<code>send</code> 会使用它而不是随机生成——这是预期行为，注意清理不需要的环境变量。</li>
-<li>与 systemd <code>Environment=</code> / <code>EnvironmentFile=</code> 天然兼容：systemd 注入的环境变量会被进程继承，clap 直接读取（见 <a href="../install/">install.md</a>）。</li>
-</ul>
-<h3 id="systemd">systemd 集成示例<a class="headerlink" href="#systemd" title="Permanent link">&para;</a></h3>
-<div class="language-ini highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/systemd/system/relaydrop.service</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">[Unit]</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="na">Description</span><span class="o">=</span><span class="s">relaydrop relay</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">[Service]</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="na">User</span><span class="o">=</span><span class="s">relaydrop</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="na">Environment</span><span class="o">=</span><span class="s">RELAYDROP_PASSWORD=SECRET</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="na">Environment</span><span class="o">=</span><span class="s">RELAYDROP_LISTEN=127.0.0.1:9090</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/local/bin/relaydrop relay</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">[Install]</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
-</span></code></pre></div>
-<p>也可用 <code>EnvironmentFile=</code> 从文件加载（一行一个 <code>KEY=VALUE</code>）：</p>
-<div class="language-ini highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">/etc/relaydrop/env</span>
-</span></code></pre></div>
+<h1 id="docker">Docker 使用<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h1>
+<p>本页说明如何使用 Docker 镜像运行中继（relay）、发送方（send）与接收方（receive）。环境变量的完整变量表、优先级与 systemd 集成见 <a href="../env/">env.md</a>（唯一事实来源）。</p>
 <h2 id="docker_1">Docker 镜像<a class="headerlink" href="#docker_1" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p><strong>版本：</strong> <code>latest</code>, <code>dev</code>(GHCR only), &lt;<code>TAG</code>&gt;</p>
@@ -1084,8 +991,31 @@
 </tbody>
 </table>
 <blockquote>
-<p>注：容器默认即以 <code>0.0.0.0:9090</code> 启动中继（<code>CMD ["relay","--listen","0.0.0.0:9090"]</code>），无需额外参数即可作为可达中继；TLS 仍由前端反向代理 / 隧道终结。如需只监听本地，可用 <code>-e RELAYDROP_LISTEN=127.0.0.1:9090</code> 覆盖。</p>
+<p>注：镜像默认即监听 <code>0.0.0.0:9090</code>——该默认值来自 <code>docker/Dockerfile</code> 的 <code>ENV RELAYDROP_LISTEN=0.0.0.0:9090</code>，而容器 <code>CMD</code> 仅为 <code>["relay"]</code>。无需额外参数即可作为可达中继；TLS 仍由前端反向代理 / 隧道终结。如需只监听本地，可用 <code>-e RELAYDROP_LISTEN=127.0.0.1:9090</code> 覆盖。</p>
 </blockquote>
+<h2 id="docker-compose">Docker Compose 部署<a class="headerlink" href="#docker-compose" title="Permanent link">&para;</a></h2>
+<p>仓库内的 <code>docker/compose.yaml</code> 通过 <code>env_file</code> 读取宿主机上的 <code>./.env</code>（可选，<code>required: false</code>）来注入 <code>RELAYDROP_*</code> 环境变量：</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">relaydrop</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relaydrop</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relaydrop</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/jetsung/relaydrop:latest</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090:9090</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</span></code></pre></div>
+<p>启动：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/compose.yaml<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<p>环境变量写在 <code>./.env</code> 里（一行一个 <code>KEY=VALUE</code>），例如只跑本地监听的中继：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># .env</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">RELAYDROP_LISTEN</span><span class="o">=</span><span class="m">127</span>.0.0.1:9090
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">RELAYDROP_PASSWORD</span><span class="o">=</span>SECRET
+</span></code></pre></div>
+<p><code>RELAYDROP_*</code> 变量名与本页顶部「环境变量」小节完全一致；除口令外，<code>RELAYDROP_LISTEN</code>、<code>RELAYDROP_TTL</code> 等也都能通过 <code>.env</code> 配置。这与下方 <code>docker run -e RELAYDROP_*</code> 是同一套变量，区别只在传入方式（文件 vs 命令行）。</p>
 <h2 id="docker_2">Docker 运行示例<a class="headerlink" href="#docker_2" title="Permanent link">&para;</a></h2>
 <p>所有命令行参数都可用 <code>-e RELAYDROP_*</code> 传入；下表给出三个子命令的容器化命令。</p>
 <h3 id="relay">中继（relay）<a class="headerlink" href="#relay" title="Permanent link">&para;</a></h3>
@@ -1205,7 +1135,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tabs", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tabs", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>

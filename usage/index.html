@@ -18,7 +18,7 @@
         <link rel="prev" href="../install/">
       
       
-        <link rel="next" href="../docker/">
+        <link rel="next" href="../env/">
       
       
         
@@ -55,8 +55,6 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
-    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -90,10 +88,6 @@
     <div data-md-component="announce">
       
     </div>
-    
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
     
     
       
@@ -632,21 +626,38 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        破坏性协议变更（升级注意）
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../env/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境变量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -666,7 +677,7 @@
   <span class="md-ellipsis">
     
   
-    环境变量与 Docker
+    Docker 部署
   
 
     
@@ -1001,97 +1012,20 @@
 </tbody>
 </table>
 <h2 id="_3">环境变量<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>除命令行参数外，每个参数的值也都可以通过环境变量设置。变量名为 <code>RELAYDROP_</code> 前缀 + 参数长名大写：</p>
-<table>
-<thead>
-<tr>
-<th>子命令</th>
-<th>参数</th>
-<th>环境变量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>relay</code></td>
-<td><code>--listen</code></td>
-<td><code>RELAYDROP_LISTEN</code></td>
-</tr>
-<tr>
-<td><code>relay</code></td>
-<td><code>--password</code></td>
-<td><code>RELAYDROP_PASSWORD</code></td>
-</tr>
-<tr>
-<td><code>relay</code></td>
-<td><code>--ttl</code></td>
-<td><code>RELAYDROP_TTL</code></td>
-</tr>
-<tr>
-<td><code>send</code></td>
-<td><code>--relay</code></td>
-<td><code>RELAYDROP_RELAY</code></td>
-</tr>
-<tr>
-<td><code>send</code></td>
-<td><code>--code</code></td>
-<td><code>RELAYDROP_CODE</code></td>
-</tr>
-<tr>
-<td><code>send</code></td>
-<td><code>--password</code></td>
-<td><code>RELAYDROP_PASSWORD</code></td>
-</tr>
-<tr>
-<td><code>send</code></td>
-<td>位置参数 <code>path</code></td>
-<td><code>RELAYDROP_PATH</code></td>
-</tr>
-<tr>
-<td><code>receive</code></td>
-<td><code>--relay</code></td>
-<td><code>RELAYDROP_RELAY</code></td>
-</tr>
-<tr>
-<td><code>receive</code></td>
-<td><code>--code</code></td>
-<td><code>RELAYDROP_CODE</code></td>
-</tr>
-<tr>
-<td><code>receive</code></td>
-<td><code>--password</code></td>
-<td><code>RELAYDROP_PASSWORD</code></td>
-</tr>
-<tr>
-<td><code>receive</code></td>
-<td><code>--out</code></td>
-<td><code>RELAYDROP_OUT</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>优先级</strong>：显式命令行参数 <strong>&gt;</strong> 环境变量 <strong>&gt;</strong> 默认值。</p>
+<p>除命令行参数外，每个参数也都可用 <code>RELAYDROP_</code> 前缀的环境变量设置（如 <code>RELAYDROP_RELAY</code>、<code>RELAYDROP_PASSWORD</code>）。</p>
 <blockquote>
-<p>环境变量与 Docker 用法（含镜像列表、容器运行示例）的单一事实来源在 <a href="../docker/">docker.md</a>，以该页为准。</p>
+<p>环境变量的完整变量表、优先级与 systemd 集成见 <a href="../env/">env.md</a>（唯一事实来源）；Docker / compose 部署中的环境变量用法见 <a href="../docker/">docker.md</a>。</p>
 </blockquote>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 例：用环境变量提供中继口令，命令行只写必要项</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RELAYDROP_PASSWORD</span><span class="o">=</span>SECRET
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">RELAYDROP_RELAY</span><span class="o">=</span>wss://relay.example.com
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--code<span class="w"> </span>MYCODE<span class="w"> </span>./big.iso<span class="w">        </span><span class="c1"># 自动读 RELAYDROP_PASSWORD / RELAYDROP_RELAY</span>
-</span></code></pre></div>
-<ul>
-<li>命令行上显式写的参数永远覆盖同名环境变量；两者都未给时才用默认值（或 <code>send</code> 的「省略 <code>--code</code> 则随机生成」）。</li>
-<li>若环境里残留 <code>RELAYDROP_CODE</code>，<code>send</code> 会使用它而不是随机生成——这是预期行为，注意清理不需要的环境变量。</li>
-<li>与 systemd <code>Environment=</code> / <code>EnvironmentFile=</code> 天然兼容：systemd 注入的环境变量会被进程继承，clap 直接读取（见 <a href="../install/">install.md</a>）。</li>
-</ul>
 <h2 id="_4">发送文件或文件夹（一条命令接收）<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>发送方省略 <code>--code</code> 时会<strong>自动生成随机密钥</strong>并打印一条可复制粘贴的接收命令；发送方先发起，
 接收方后加入。中继口令 <code>--password</code> 是<strong>事先确定的固定常量</strong>，会原样嵌入打印命令，使接收方也能向中继鉴权。</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 发送方</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>wss://relay.example.com/relay<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>./big.iso
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># 终端打印：</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">#   On the other computer run:</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">#     relaydrop receive --relay wss://relay.example.com/relay --code &lt;随机&gt; --password SECRET --out .</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 接收方：直接粘贴上面打印的命令</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 发送方</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>wss://relay.example.com/relay<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>./big.iso
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># 终端打印：</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">#   On the other computer run:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">#     relaydrop receive --relay wss://relay.example.com/relay --code &lt;随机&gt; --password SECRET --out .</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 接收方：直接粘贴上面打印的命令</span>
 </span></code></pre></div>
 <ul>
 <li>流程：生成随机 <code>code</code> → 打印接收命令 → 连接 → 鉴权 → 加入房间 → 发送清单（路径/大小/逐文件哈希）
@@ -1101,11 +1035,11 @@
 </ul>
 <h2 id="_5">文件夹传输与多源发送<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <p><code>send</code> 支持任意数量的源——多个文件、多个目录、或文件与目录的混合，全部在一次传输里完成：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 多个文件 + 一个目录，混发</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>wss://relay.example.com/relay<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>./a.txt<span class="w"> </span>./b.log<span class="w"> </span>./myfolder
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 也可用可重复的 --file 指定（与位置参数合并）</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>wss://relay.example.com/relay<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>--file<span class="w"> </span>a.txt<span class="w"> </span>--file<span class="w"> </span>b.log
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 多个文件 + 一个目录，混发</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>wss://relay.example.com/relay<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>./a.txt<span class="w"> </span>./b.log<span class="w"> </span>./myfolder
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 也可用可重复的 --file 指定（与位置参数合并）</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>wss://relay.example.com/relay<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>--file<span class="w"> </span>a.txt<span class="w"> </span>--file<span class="w"> </span>b.log
 </span></code></pre></div>
 <p>规则：</p>
 <ul>
@@ -1118,11 +1052,11 @@
   发送方在发送前检测并报错 <code>duplicate entry name: ...</code>，不会发出任何数据。</li>
 </ul>
 <h2 id="_6">接收文件<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>relaydrop<span class="w"> </span>receive<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--relay<span class="w"> </span>wss://relay.example.com/relay<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--code<span class="w"> </span>MYCODE<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--password<span class="w"> </span>SECRET<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--out<span class="w"> </span>./downloads
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>relaydrop<span class="w"> </span>receive<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--relay<span class="w"> </span>wss://relay.example.com/relay<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--code<span class="w"> </span>MYCODE<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--password<span class="w"> </span>SECRET<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--out<span class="w"> </span>./downloads
 </span></code></pre></div>
 <ul>
 <li>接收方先启动也没关系（房间会等待另一个对等端）。</li>
@@ -1160,32 +1094,32 @@
 <p>以 <code>wss://</code> 开头会自动走加密 WebSocket（由 tokio-tungstenite + rustls 完成 TLS）。</p>
 <p>不带协议头时（例如 <code>--relay 192.168.1.10:9090</code> 或 <code>RELAYDROP_RELAY=127.0.0.1:9090</code>），客户端会自动补上 <code>tcp://</code> 再连接，因此裸 <code>host:port</code> 等价于 <code>tcp://host:port</code>。其它无法识别的协议头（如 <code>http://</code>）仍会报错，提示必须使用 <code>tcp://</code> / <code>ws://</code> / <code>wss://</code>。</p>
 <h2 id="_7">完整示例（本机直连验证）<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 终端 1：中继</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>relaydrop<span class="w"> </span>relay<span class="w"> </span>--listen<span class="w"> </span><span class="m">127</span>.0.0.1:9090<span class="w"> </span>--password<span class="w"> </span>SECRET
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># 终端 2：接收</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>relaydrop<span class="w"> </span>receive<span class="w"> </span>--relay<span class="w"> </span>tcp://127.0.0.1:9090<span class="w"> </span>--code<span class="w"> </span>ABC<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>--out<span class="w"> </span>./dl
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># 终端 3：发送</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>tcp://127.0.0.1:9090<span class="w"> </span>--code<span class="w"> </span>ABC<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>--file<span class="w"> </span>./photo.zip
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 终端 1：中继</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>relaydrop<span class="w"> </span>relay<span class="w"> </span>--listen<span class="w"> </span><span class="m">127</span>.0.0.1:9090<span class="w"> </span>--password<span class="w"> </span>SECRET
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 终端 2：接收</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>relaydrop<span class="w"> </span>receive<span class="w"> </span>--relay<span class="w"> </span>tcp://127.0.0.1:9090<span class="w"> </span>--code<span class="w"> </span>ABC<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>--out<span class="w"> </span>./dl
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 终端 3：发送</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>tcp://127.0.0.1:9090<span class="w"> </span>--code<span class="w"> </span>ABC<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>--file<span class="w"> </span>./photo.zip
 </span></code></pre></div>
 <h2 id="_8">跨网络拓扑示例（客户端与中继跨网络）<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
 <p>典型场景：客户端与中继不在同一网络（如中继在远端 VPS，发送方与其同内网，接收方在另一网络）。两端都通过 <code>wss://</code> 经前端的 TLS 终结层连到
 那台 VPS 上的明文中继，文件在管道里是密文。</p>
 <p><strong>中继所在 VPS</strong>：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 中继仅本地明文监听，TLS 由 nginx/cloudflared 在前端终结</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>relaydrop<span class="w"> </span>relay<span class="w"> </span>--listen<span class="w"> </span><span class="m">127</span>.0.0.1:9090<span class="w"> </span>--password<span class="w"> </span>SECRET
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># 另起：nginx 反向代理 或 cloudflared 隧道，把 wss://relay.example.com 暴露出去</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># （部署见 docs/nginx.md / docs/cloudflared.md，前端域名指向中继）</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 中继仅本地明文监听，TLS 由 nginx/cloudflared 在前端终结</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>relaydrop<span class="w"> </span>relay<span class="w"> </span>--listen<span class="w"> </span><span class="m">127</span>.0.0.1:9090<span class="w"> </span>--password<span class="w"> </span>SECRET
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># 另起：nginx 反向代理 或 cloudflared 隧道，把 wss://relay.example.com 暴露出去</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># （部署见 docs/nginx.md / docs/cloudflared.md，前端域名指向中继）</span>
 </span></code></pre></div>
 <p><strong>发送方（与中继同内网/可达）</strong>：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>tcp://127.0.0.1:9090<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>./myfolder
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># 终端打印：</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">#   On the other computer run:</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">#     relaydrop receive --relay wss://relay.example.com --code &lt;随机&gt; --password SECRET --out .</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>relaydrop<span class="w"> </span>send<span class="w"> </span>--relay<span class="w"> </span>tcp://127.0.0.1:9090<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>./myfolder
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># 终端打印：</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">#   On the other computer run:</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">#     relaydrop receive --relay wss://relay.example.com --code &lt;随机&gt; --password SECRET --out .</span>
 </span></code></pre></div>
 <p><strong>接收方（可访问前端域名）</strong>：直接粘贴上面打印的命令（注意 <code>--relay</code> 已是 <code>wss://relay.example.com</code>）：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>relaydrop<span class="w"> </span>receive<span class="w"> </span>--relay<span class="w"> </span>wss://relay.example.com<span class="w"> </span>--code<span class="w"> </span>&lt;随机&gt;<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>--out<span class="w"> </span>.
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>relaydrop<span class="w"> </span>receive<span class="w"> </span>--relay<span class="w"> </span>wss://relay.example.com<span class="w"> </span>--code<span class="w"> </span>&lt;随机&gt;<span class="w"> </span>--password<span class="w"> </span>SECRET<span class="w"> </span>--out<span class="w"> </span>.
 </span></code></pre></div>
 <p>要点：</p>
 <ul>
@@ -1204,13 +1138,6 @@
 <li><strong>为什么要用 <code>wss://</code>？</strong> 当客户端与中继之间存在 TLS 终结层（反向代理 / 隧道）时，<code>wss://</code> 让客户端经该层访问中继；若中继本身可达，用 <code>tcp://</code>/<code>ws://</code> 直连即可，无需 TLS 层。</li>
 <li><strong>房间超时（TTL）怎么算？</strong> 房间在未被配对时按 <code>--ttl</code>（默认 300s）存活，超时自动清理；配对成功后传输期间不会被清理。发送方先连上等待时，若超过 TTL 仍未有接收方加入，需重发以重新建房间。</li>
 </ul>
-<h2 id="_10">破坏性协议变更（升级注意）<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
-<p>本版本将传输线协议由「单文件 <code>FileMeta</code> + <code>DataChunk</code> + <code>Done{sha256}</code>」升级为
-「<code>Manifest</code> + <code>DataChunk</code> + <code>FileEnd</code> + <code>Done</code>」，以支持文件夹与逐文件校验。
-<strong>旧版单文件客户端无法与新版互通</strong>，发送方与接收方必须同时升级到含本变更的版本。</p>
-<p>后续将 <code>Manifest</code> 进一步改为<strong>扁平 <code>entries</code> 列表（移除 <code>is_folder</code>）</strong>，以支持 <code>send</code> 一次发送
-多个文件/目录/混合，每个条目 <code>relpath</code> 相对 <code>--out</code> 并保留顶层名。
-<strong>仍含 <code>is_folder</code> 的旧版客户端无法与本版互通</strong>，发送方与接收方须同时升级。</p>
 
 
 
@@ -1294,7 +1221,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tabs", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tabs", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>

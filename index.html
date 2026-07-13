@@ -53,8 +53,6 @@
       
     
     
-      <link rel="stylesheet" href="stylesheets/extra.css">
-    
     <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -88,10 +86,6 @@
     <div data-md-component="announce">
       
     </div>
-    
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
     
     
       
@@ -544,6 +538,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Docker 镜像">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使用 compose 启动
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -682,6 +693,34 @@
   
   
     <li class="md-nav__item">
+      <a href="env/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    环境变量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="docker/" class="md-nav__link">
         
   
@@ -689,7 +728,7 @@
   <span class="md-ellipsis">
     
   
-    环境变量与 Docker
+    Docker 部署
   
 
     
@@ -1080,7 +1119,7 @@
 <p><code>send</code> 省略 <code>--code</code> 时会生成随机密钥并打印一条可复制粘贴的 <code>receive</code> 命令（含 <code>--code</code> 与 <code>--password</code>）。
 <code>--relay</code> 支持三种形式：<code>tcp://host:port</code>（裸 TCP）、<code>ws://host:port/path</code>（明文 WebSocket）、<code>wss://host/path</code>（经 TLS 终结的 WebSocket）；<strong>省略协议头（形如 <code>127.0.0.1:9090</code>）时默认按 <code>tcp://</code> 处理</strong>。以 <code>wss://</code> 开头即自动走加密 WebSocket。</p>
 <blockquote>
-<p><strong>环境变量</strong>：所有命令行参数也都可通过环境变量设置——<code>RELAYDROP_</code> 前缀加参数长名大写，例如 <code>RELAYDROP_RELAY</code>、<code>RELAYDROP_PASSWORD</code>、<code>RELAYDROP_CODE</code>、<code>RELAYDROP_PATH</code>、<code>RELAYDROP_OUT</code>。优先级为 <strong>命令行 &gt; 环境变量 &gt; 默认值</strong>；完整变量表与 Docker 用法见 <a href="docker/">docs/docker.md</a>。</p>
+<p><strong>环境变量</strong>：所有命令行参数也都可通过环境变量设置——<code>RELAYDROP_</code> 前缀加参数长名大写，例如 <code>RELAYDROP_RELAY</code>、<code>RELAYDROP_PASSWORD</code>、<code>RELAYDROP_CODE</code>、<code>RELAYDROP_PATH</code>、<code>RELAYDROP_OUT</code>。优先级为 <strong>命令行 &gt; 环境变量 &gt; 默认值</strong>；完整变量表见 <a href="env/">docs/env.md</a>。</p>
 </blockquote>
 <h2 id="_6">文档<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1089,7 +1128,8 @@
 <li><a href="cloudflare/">docs/cloudflare.md</a> — Cloudflare 侧配置</li>
 <li><a href="cloudflared/">docs/cloudflared.md</a> — cloudflared 隧道（命名隧道 + systemd 守护）</li>
 <li><a href="usage/">docs/usage.md</a> — 客户端完整用法、示例与 FAQ</li>
-<li><a href="docker/">docs/docker.md</a> — 环境变量与 Docker 镜像/运行用法</li>
+<li><a href="env/">docs/env.md</a> — 环境变量完整变量表、优先级与 systemd 集成</li>
+<li><a href="docker/">docs/docker.md</a> — Docker 镜像与容器运行用法</li>
 <li><a href="security/">docs/security.md</a> — 安全提示与方案权衡</li>
 <li><a href="protocol/">docs/protocol.md</a> — 开发者向：线协议、加密信封与密钥派生</li>
 </ul>
@@ -1140,6 +1180,36 @@
 </tr>
 </tbody>
 </table>
+<p>用 Docker 部署中继时的 compose <code>.env</code> 配置与容器运行示例见 <a href="docker/">docs/docker.md</a>；环境变量完整变量表见 <a href="env/">docs/env.md</a>（唯一事实来源）。</p>
+<h3 id="compose">使用 compose 启动<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h3>
+<p>直接拉取预构建镜像运行：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<p><code>compose.yaml</code> 内容（复制到自己的服务中即可）：</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">relaydrop</span><span class="p">:</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relaydrop</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">relaydrop</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/jetsung/relaydrop:latest</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9090:9090</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</span></code></pre></div>
+<p><code>compose.yaml</code> 通过 <code>env_file</code> 读取宿主机 <code>./.env</code>（<code>required: false</code>）注入 <code>RELAYDROP_*</code> 环境变量；<code>.env</code> 文件写法与 <code>docker run -e</code> 用的是同一套变量，完整变量表见 <a href="env/">docs/env.md</a>。</p>
+<h4 id="env"><code>.env</code> 文件示例<a class="headerlink" href="#env" title="Permanent link">&para;</a></h4>
+<p>在 <code>compose.yaml</code> 同目录下新建 <code>.env</code>，一行一个 <code>KEY=VALUE</code>：</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># .env</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">RELAYDROP_LISTEN</span><span class="o">=</span><span class="m">127</span>.0.0.1:9090
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">RELAYDROP_PASSWORD</span><span class="o">=</span>SECRET
+</span></code></pre></div>
+<ul>
+<li><code>RELAYDROP_PASSWORD</code>：中继口令，客户端须一致才能鉴权（必填）。</li>
+<li><code>RELAYDROP_LISTEN</code>：监听地址，默认 <code>0.0.0.0:9090</code>；设为 <code>127.0.0.1:9090</code> 可仅本地监听，由前端网关代理。</li>
+<li>其余变量（<code>RELAYDROP_TTL</code> 等）按需添加；完整变量表见 <a href="env/">docs/env.md</a>。</li>
+</ul>
 <h2 id="_9">仓库镜像<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
 <p><a href="https://git.jetsung.com/jetsung/relaydrop">MyCode</a> ● <a href="https://atomgit.com/jetsung/relaydrop">AtomGit</a> ● <a href="https://github.com/jetsung/relaydrop">GitHub</a></p>
 
@@ -1225,7 +1295,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tabs", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "toc.integrate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tabs", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "toc.integrate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
     
     
       <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
