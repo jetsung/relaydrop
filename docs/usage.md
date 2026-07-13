@@ -13,36 +13,9 @@
 
 ## 环境变量
 
-除命令行参数外，每个参数的值也都可以通过环境变量设置。变量名为 `RELAYDROP_` 前缀 + 参数长名大写：
+除命令行参数外，每个参数也都可用 `RELAYDROP_` 前缀的环境变量设置（如 `RELAYDROP_RELAY`、`RELAYDROP_PASSWORD`）。
 
-| 子命令 | 参数 | 环境变量 |
-| --- | --- | --- |
-| `relay`   | `--listen` | `RELAYDROP_LISTEN` |
-| `relay`   | `--password` | `RELAYDROP_PASSWORD` |
-| `relay`   | `--ttl` | `RELAYDROP_TTL` |
-| `send`    | `--relay` | `RELAYDROP_RELAY` |
-| `send`    | `--code` | `RELAYDROP_CODE` |
-| `send`    | `--password` | `RELAYDROP_PASSWORD` |
-| `send`    | 位置参数 `path` | `RELAYDROP_PATH` |
-| `receive` | `--relay` | `RELAYDROP_RELAY` |
-| `receive` | `--code` | `RELAYDROP_CODE` |
-| `receive` | `--password` | `RELAYDROP_PASSWORD` |
-| `receive` | `--out` | `RELAYDROP_OUT` |
-
-**优先级**：显式命令行参数 **>** 环境变量 **>** 默认值。
-
-> 环境变量与 Docker 用法（含镜像列表、容器运行示例）的单一事实来源在 [docker.md](docker.md)，以该页为准。
-
-```bash
-# 例：用环境变量提供中继口令，命令行只写必要项
-export RELAYDROP_PASSWORD=SECRET
-export RELAYDROP_RELAY=wss://relay.example.com
-relaydrop send --code MYCODE ./big.iso        # 自动读 RELAYDROP_PASSWORD / RELAYDROP_RELAY
-```
-
-- 命令行上显式写的参数永远覆盖同名环境变量；两者都未给时才用默认值（或 `send` 的「省略 `--code` 则随机生成」）。
-- 若环境里残留 `RELAYDROP_CODE`，`send` 会使用它而不是随机生成——这是预期行为，注意清理不需要的环境变量。
-- 与 systemd `Environment=` / `EnvironmentFile=` 天然兼容：systemd 注入的环境变量会被进程继承，clap 直接读取（见 [install.md](install.md)）。
+> 环境变量的完整变量表、优先级与 systemd 集成见 [env.md](env.md)（唯一事实来源）；Docker / compose 部署中的环境变量用法见 [docker.md](docker.md)。
 
 ## 发送文件或文件夹（一条命令接收）
 
@@ -171,13 +144,3 @@ relaydrop receive --relay wss://relay.example.com --code <随机> --password SEC
 - **支持断点续传 / 压缩 / 多对多吗？**：**均不支持**。一次传输为单房间、单发送方对单接收方、整文件重传；中断需重新发起。需要这些能力属后续增强范围。
 - **为什么要用 `wss://`？** 当客户端与中继之间存在 TLS 终结层（反向代理 / 隧道）时，`wss://` 让客户端经该层访问中继；若中继本身可达，用 `tcp://`/`ws://` 直连即可，无需 TLS 层。
 - **房间超时（TTL）怎么算？** 房间在未被配对时按 `--ttl`（默认 300s）存活，超时自动清理；配对成功后传输期间不会被清理。发送方先连上等待时，若超过 TTL 仍未有接收方加入，需重发以重新建房间。
-
-## 破坏性协议变更（升级注意）
-
-本版本将传输线协议由「单文件 `FileMeta` + `DataChunk` + `Done{sha256}`」升级为
-「`Manifest` + `DataChunk` + `FileEnd` + `Done`」，以支持文件夹与逐文件校验。
-**旧版单文件客户端无法与新版互通**，发送方与接收方必须同时升级到含本变更的版本。
-
-后续将 `Manifest` 进一步改为**扁平 `entries` 列表（移除 `is_folder`）**，以支持 `send` 一次发送
-多个文件/目录/混合，每个条目 `relpath` 相对 `--out` 并保留顶层名。
-**仍含 `is_folder` 的旧版客户端无法与本版互通**，发送方与接收方须同时升级。

@@ -92,7 +92,7 @@ cargo build --release
 `send` 省略 `--code` 时会生成随机密钥并打印一条可复制粘贴的 `receive` 命令（含 `--code` 与 `--password`）。
 `--relay` 支持三种形式：`tcp://host:port`（裸 TCP）、`ws://host:port/path`（明文 WebSocket）、`wss://host/path`（经 TLS 终结的 WebSocket）；**省略协议头（形如 `127.0.0.1:9090`）时默认按 `tcp://` 处理**。以 `wss://` 开头即自动走加密 WebSocket。
 
-> **环境变量**：所有命令行参数也都可通过环境变量设置——`RELAYDROP_` 前缀加参数长名大写，例如 `RELAYDROP_RELAY`、`RELAYDROP_PASSWORD`、`RELAYDROP_CODE`、`RELAYDROP_PATH`、`RELAYDROP_OUT`。优先级为 **命令行 > 环境变量 > 默认值**；完整变量表与 Docker 用法见 [docs/docker.md](docs/docker.md)。
+> **环境变量**：所有命令行参数也都可通过环境变量设置——`RELAYDROP_` 前缀加参数长名大写，例如 `RELAYDROP_RELAY`、`RELAYDROP_PASSWORD`、`RELAYDROP_CODE`、`RELAYDROP_PATH`、`RELAYDROP_OUT`。优先级为 **命令行 > 环境变量 > 默认值**；完整变量表见 [docs/env.md](docs/env.md)。
 
 ## 文档
 
@@ -101,7 +101,9 @@ cargo build --release
 - [docs/cloudflare.md](docs/cloudflare.md) — Cloudflare 侧配置
 - [docs/cloudflared.md](docs/cloudflared.md) — cloudflared 隧道（命名隧道 + systemd 守护）
 - [docs/usage.md](docs/usage.md) — 客户端完整用法、示例与 FAQ
-- [docs/docker.md](docs/docker.md) — 环境变量与 Docker 镜像/运行用法
+- [docs/env.md](docs/env.md) — 环境变量完整变量表、优先级与 systemd 集成
+- [docs/docker.md](docs/docker.md) — Docker 镜像与容器运行用法
+
 - [docs/security.md](docs/security.md) — 安全提示与方案权衡
 - [docs/protocol.md](docs/protocol.md) — 开发者向：线协议、加密信封与密钥派生
 
@@ -121,7 +123,11 @@ cargo build --release
 - **中继一定要用 `wss://` 吗？** 不是。中继可达时用 `tcp://`/`ws://` 直连即可；只有当客户端与中继之间存在 TLS 终结层（反向代理 / 隧道）时，才使用 `wss://`。
 - 更多排错与示例见 [docs/usage.md](docs/usage.md)。
 
-## Docker 镜像
+## Docker 部署
+
+### 使用预构建镜像
+
+#### 可用镜像仓库
 
 > **版本：** `latest`, `dev`(GHCR only), <`TAG`>
 
@@ -131,6 +137,46 @@ cargo build --release
 | [**GitHub Container Registry**](https://ghcr.io/jetsung/relaydrop) | `ghcr.io/jetsung/relaydrop`                            |
 | **Tencent Cloud Container Registry（SG）**                                                       | `sgccr.ccs.tencentyun.com/jetsung/relaydrop`             |
 | **Aliyun Container Registry（GZ）**                                                              | `registry.cn-guangzhou.aliyuncs.com/jetsung/relaydrop` |
+
+### 使用 compose 启动
+
+直接拉取预构建镜像运行：
+
+```bash
+docker compose up -d
+```
+
+`compose.yaml` 内容（复制到自己的服务中即可）：
+
+```yaml
+services:
+  relaydrop:
+    container_name: relaydrop
+    env_file:
+      - path: ./.env
+        required: false
+    hostname: relaydrop
+    image: ghcr.io/jetsung/relaydrop:latest
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+```
+
+`compose.yaml` 通过 `env_file` 读取宿主机 `./.env`（`required: false`）注入 `RELAYDROP_*` 环境变量；`.env` 文件写法与 `docker run -e` 用的是同一套变量，完整变量表见 [docs/env.md](docs/env.md)。
+
+#### `.env` 文件示例
+
+在 `compose.yaml` 同目录下新建 `.env`，一行一个 `KEY=VALUE`：
+
+```bash
+# .env
+RELAYDROP_LISTEN=127.0.0.1:9090
+RELAYDROP_PASSWORD=SECRET
+```
+
+- `RELAYDROP_PASSWORD`：中继口令，客户端须一致才能鉴权（必填）。
+- `RELAYDROP_LISTEN`：监听地址，默认 `0.0.0.0:9090`；设为 `127.0.0.1:9090` 可仅本地监听，由前端网关代理。
+- 其余变量（`RELAYDROP_TTL` 等）按需添加；完整变量表见 [docs/env.md](docs/env.md)。
 
 ## 仓库镜像
 

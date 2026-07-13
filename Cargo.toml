@@ -3,7 +3,7 @@ name = "relaydrop"
 version = "0.1.0"
 edition = "2024"
 description = "Minimal file relay over WebSocket/TLS relay transport"
-license = "MIT"
+license = "Apache-2.0"
 
 [[bin]]
 name = "relaydrop"
@@ -29,3 +29,19 @@ rand = "0.10"
 anyhow = "1"
 hex = "0.4"
 base64 = "0.22"
+
+[package.metadata.deb]
+maintainer = "Jetsung Chan <i@jetsung.com>"
+assets = [
+    # [源路径, 目标路径, 权限]
+    ["target/release/relaydrop", "usr/bin/relaydrop", "755"],
+    # 如果有配置文件，可以这样加：
+    # ["assets/config.toml", "etc/my-tool/config.toml", "644"],
+]
+
+[package.metadata.generate-rpm]
+maintainer = "Jetsung Chan <i@jetsung.com>"
+assets = [
+    # [源路径, 目标路径, 权限]
+    { source = "target/release/relaydrop", dest = "/usr/bin/relaydrop", mode = "755" }#
+]

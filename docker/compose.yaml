@@ -1,0 +1,14 @@
+services:
+  relaydrop:
+    container_name: relaydrop
+    env_file:
+      - path: ./.env
+        required: false
+    hostname: relaydrop
+    image: ghcr.io/jetsung/relaydrop:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 9090:9090
+    restart: unless-stopped

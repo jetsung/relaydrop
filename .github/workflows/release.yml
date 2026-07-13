@@ -20,7 +20,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
             submodules: true
       - name: Extract tag name
@@ -43,6 +43,7 @@ jobs:
       - name: Install target for Linux
         run: |
           for arch in x86_64 aarch64 loongarch64; do
+            rustup target add $arch-unknown-linux-gnu
             rustup target add $arch-unknown-linux-musl
           done
       - name: Install dependencies
@@ -51,31 +52,51 @@ jobs:
           sudo apt install -y musl-tools musl-dev
       - name: Install cargo-zigbuild
         run: cargo install cargo-zigbuild
+      - name: Install cargo-deb and cargo-generate-rpm
+        run: |
+          cargo install cargo-deb
+          cargo install cargo-generate-rpm
       - name: Update submodules
         run: git submodule update --init --recursive
       - name: Build for Linux
         run: |
           for arch in x86_64 aarch64 loongarch64; do
+            # gnu binaries -> deb/rpm
+            cargo-zigbuild zigbuild -p relaydrop --release --target $arch-unknown-linux-gnu
+            # musl static binaries -> tar.xz (for Alpine/docker-musl)
             cargo-zigbuild zigbuild -p relaydrop --release --target $arch-unknown-linux-musl
           done
-      - name: Create release tarballs
+      - name: Package .deb, .rpm and musl tarball
         run: |
           mkdir ${{ env.RELEASE_DIR }}
           for arch in x86_64 aarch64 loongarch64; do
+            # .deb (gnu)
+            # --no-strip: the cross binary is built by cargo-zigbuild; the host
+            # `strip` cannot recognise aarch64/loongarch64 binaries, so skip it.
+            cargo deb --target $arch-unknown-linux-gnu --no-build --no-strip
+            mv target/$arch-unknown-linux-gnu/debian/*.deb ${{ env.RELEASE_DIR }}/
+
+            # .rpm (gnu) — cargo-generate-rpm emits the .rpm under
+            # target/$arch-unknown-linux-gnu/generate-rpm/, so locate it with find
+            cargo generate-rpm --target $arch-unknown-linux-gnu
+            mv target/$arch-unknown-linux-gnu/generate-rpm/*.rpm ${{ env.RELEASE_DIR }}/
+
+            # gnu tarball
+            tar -cJf "${{ env.RELEASE_DIR }}/relaydrop-v${{ steps.tag.outputs.VERSION }}-$arch-unknown-linux-gnu.tar.xz" -C target/$arch-unknown-linux-gnu/release relaydrop
+
+            # musl static tarball (for Alpine / musl-based docker)
             tar -cJf "${{ env.RELEASE_DIR }}/relaydrop-v${{ steps.tag.outputs.VERSION }}-$arch-unknown-linux-musl.tar.xz" -C target/$arch-unknown-linux-musl/release relaydrop
-          done
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v2
+          done          
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v7
         with:
-          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          files: ${{ env.RELEASE_DIR }}/*.tar.xz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: packages-linux
+          path: ${{ env.RELEASE_DIR }}/*
 
   build-macos:
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
             submodules: true
       - name: Extract tag name
@@ -107,18 +128,16 @@ jobs:
           for arch in x86_64 aarch64; do
             tar -cJf "${{ env.RELEASE_DIR }}/relaydrop-v${{ steps.tag.outputs.VERSION }}-$arch-apple-darwin.tar.xz" -C target/$arch-apple-darwin/release relaydrop
           done
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v2
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v7
         with:
-          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          files: ${{ env.RELEASE_DIR }}/*.tar.xz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: packages-macos
+          path: ${{ env.RELEASE_DIR }}/*
 
   build-windows:
     runs-on: windows-2025
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
             submodules: true
       - name: Extract tag name
@@ -157,10 +176,26 @@ jobs:
           for arch in x86_64 aarch64; do
             zip -j "${{ env.RELEASE_DIR }}/relaydrop-v${{ steps.tag.outputs.VERSION }}-$arch-pc-windows-msvc.zip" target/$arch-pc-windows-msvc/release/relaydrop.exe
           done
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v2
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v7
         with:
-          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          files: ${{ env.RELEASE_DIR }}/*.zip
+          name: packages-windows
+          path: ${{ env.RELEASE_DIR }}/*
+
+  create-release:
+    needs: [build-linux, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: all-dist/
+          pattern: packages-*
+          merge-multiple: true
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: all-dist/*
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

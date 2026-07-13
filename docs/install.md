@@ -120,9 +120,9 @@ systemctl enable --now relaydrop
 
 ### 用环境变量注入参数
 
-relaydrop 的每个参数也都支持环境变量（见 [usage.md](usage.md) 的「环境变量」小节），命名为 `RELAYDROP_<参数大写>`。
+relaydrop 的每个参数也都支持环境变量（完整变量表见 [env.md](env.md)），命名为 `RELAYDROP_<参数大写>`。
 systemd 通过 `Environment=` / `EnvironmentFile=` 注入的变量会被中继进程继承，clap 直接读取，
-因此上面的 `--password ${CROC_PASSWORD}` 也可以改为完全走环境变量：
+因此上面的 `--password ${RELAYDROP_PASSWORD}` 也可以改为完全走环境变量：
 
 ```ini
 [Service]
