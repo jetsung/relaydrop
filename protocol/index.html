@@ -968,7 +968,7 @@
 
 
 <h1 id="_1">线协议与加密（开发者向）<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p>本文面向想理解或修改 relaydrop 传输层/加密层的开发者。所有描述以源码为准：</p>
+<p>本文面向想理解或修改 RelayDrop 传输层/加密层的开发者。所有描述以源码为准：</p>
 <ul>
 <li>帧抽象与 <code>Msg</code> 枚举：<code>src/framed.rs</code></li>
 <li>密钥派生与 AES-GCM 信封：<code>src/crypto.rs</code></li>
@@ -977,7 +977,7 @@
 <p>本文件只描述当前实现；如需升级为 PAKE / 前向保密，请以 <code>docs/security.md</code> 的路线为准并同步更新本文。</p>
 </blockquote>
 <h2 id="1">1. 整体模型<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
-<p>relaydrop 采用「<strong>中继房间配对 + 双向字节管道</strong>」的核心模型。</p>
+<p>RelayDrop 采用「<strong>中继房间配对 + 双向字节管道</strong>」的核心模型。</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> sender ──(FramedStream)──► relay room ◄──(FramedStream)──► receiver
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        client&lt;-&gt;relay 控制通道(relay_key)    peer&lt;-&gt;peer 文件(被 file_key 加密)
 </span></code></pre></div>
@@ -1082,7 +1082,7 @@
 <li>控制通道帧用 <code>relay_key</code> 密封，文件分块用 <code>file_key</code> 密封（见 <code>client.rs</code> 中 <code>DataChunk</code> 的封装）。</li>
 </ul>
 <h2 id="6-pake">6. 关于 PAKE（口令认证密钥交换）<a class="headerlink" href="#6-pake" title="Permanent link">&para;</a></h2>
-<p>relaydrop <strong>省略了 PAKE</strong>，直接由共享口令 <code>room_code</code> 派生 <code>file_key</code>。这意味着：</p>
+<p>RelayDrop <strong>省略了 PAKE</strong>，直接由共享口令 <code>room_code</code> 派生 <code>file_key</code>。这意味着：</p>
 <ul>
 <li>若中继（你的 VPS）同时知道 <code>room_code</code>，它<strong>理论上能解密文件</strong>。</li>
 <li><strong>假设中继可信</strong>（它是你自己的 VPS）。在此前提下，简化是安全的，且实现更简单。</li>

@@ -1036,10 +1036,10 @@
   
 
 
-<h1 id="relaydrop">relaydrop<a class="headerlink" href="#relaydrop" title="Permanent link">&para;</a></h1>
+<h1 id="relaydrop">RelayDrop<a class="headerlink" href="#relaydrop" title="Permanent link">&para;</a></h1>
 <p>一个文件中继工具，核心特性是 <strong>支持通过 WebSocket over TLS（<code>wss://</code>）中转</strong>，让发送方与接收方可以经过任意 TLS 终结的反向代理或隧道访问中继，而中继本身不持有证书、不占用 443。</p>
 <h2 id="_1">为什么<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p>「房间配对 + 双向字节管道」协议默认承载在 TCP 上（中继默认 <code>:9090</code>）。relaydrop 额外把同一套协议承载到 <strong>WebSocket over TLS</strong> 之上，让发送方与接收方可以经过任意 TLS 终结的反向代理（如 nginx）或隧道（如 cloudflared）访问中继，而中继本身不持有证书、不占用 443。</p>
+<p>「房间配对 + 双向字节管道」协议默认承载在 TCP 上（中继默认 <code>:9090</code>）。RelayDrop 额外把同一套协议承载到 <strong>WebSocket over TLS</strong> 之上，让发送方与接收方可以经过任意 TLS 终结的反向代理（如 nginx）或隧道（如 cloudflared）访问中继，而中继本身不持有证书、不占用 443。</p>
 <h2 id="_2">架构<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> sender ─┐                                    ┌─ receiver
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>         │   relay channel (relay_key)        │
@@ -1145,7 +1145,7 @@
 </ul>
 <h2 id="_8">常见问题<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>relaydrop 与其他 relay 工具互通吗？</strong> 不互通。relaydrop 是独立实现，协议与口令/密钥模型均不同；发送方与接收方都须使用 relaydrop。</li>
+<li><strong>RelayDrop 与其他 relay 工具互通吗？</strong> 不互通。RelayDrop 是独立实现，协议与口令/密钥模型均不同；发送方与接收方都须使用 relaydrop。</li>
 <li><strong>支持多大文件 / 断点续传吗？</strong> 文件大小仅受磁盘限制，按 64KB 流式分块；不支持断点续传、压缩、多人。</li>
 <li><strong>中继一定要用 <code>wss://</code> 吗？</strong> 不是。中继可达时用 <code>tcp://</code>/<code>ws://</code> 直连即可；只有当客户端与中继之间存在 TLS 终结层（反向代理 / 隧道）时，才使用 <code>wss://</code>。</li>
 <li>更多排错与示例见 <a href="usage/">docs/usage.md</a>。</li>

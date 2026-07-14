@@ -1031,7 +1031,7 @@
 <ul>
 <li><strong><code>ws://</code> 前缀</strong>：<code>ingress</code> 的 <code>service</code> 写成 <code>ws://127.0.0.1:9090</code>，cloudflared 会透明代理 WebSocket；
   不要写成 <code>http://</code>（虽也能升级，但 <code>ws://</code> 语义更明确）。</li>
-<li><strong>空闲超时</strong>：Cloudflare 对 WebSocket 约 100s 无数据会断；relaydrop 的 <code>WsFramed</code> 每 30s 发 Ping 保活，
+<li><strong>空闲超时</strong>：Cloudflare 对 WebSocket 约 100s 无数据会断；RelayDrop 的 <code>WsFramed</code> 每 30s 发 Ping 保活，
   配对等待与长传输都不会触发空闲断开。</li>
 <li><strong>客户端 <code>--relay</code> 不含 <code>/relay</code> 路径</strong>：cloudflared 按 <code>hostname</code> 路由（不像 nginx 用 <code>location /relay</code>），
   所以直接写 <code>wss://relay.example.com</code> 即可。</li>
@@ -1074,7 +1074,7 @@
 </tr>
 </tbody>
 </table>
-<p>两种方式对 relaydrop 而言<strong>等价</strong>：客户端都通过 <code>wss://</code> 经 Cloudflare 边缘连到本地明文中继。</p>
+<p>两种方式对 RelayDrop 而言<strong>等价</strong>：客户端都通过 <code>wss://</code> 经 Cloudflare 边缘连到本地明文中继。</p>
 
 
 

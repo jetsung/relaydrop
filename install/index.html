@@ -981,7 +981,7 @@
 
 
 <h1 id="_1">安装与部署中继<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p>本文说明如何在 VPS 上部署 relaydrop 中继，并提供三种部署方式。</p>
+<p>本文说明如何在 VPS 上部署 RelayDrop 中继，并提供三种部署方式。</p>
 <h2 id="_2">构建 / 获取二进制<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <p>在 VPS（或任意可编译的机器）上：</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cargo<span class="w"> </span>build<span class="w"> </span>--release
@@ -989,7 +989,7 @@
 </span></code></pre></div>
 <p>将 <code>relaydrop</code> 二进制放到 VPS（如 <code>/usr/local/bin/relaydrop</code>）。</p>
 <h2 id="_3">中继的端口与证书策略<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>relaydrop 的中继 <strong>只监听一个 TCP 端口，使用明文 WebSocket（或裸 TCP）</strong>，本身不处理 TLS、不占用 443。
+<p>RelayDrop 的中继 <strong>只监听一个 TCP 端口，使用明文 WebSocket（或裸 TCP）</strong>，本身不处理 TLS、不占用 443。
 TLS 终结由前端组件负责：</p>
 <ul>
 <li>VPS 的 443/80 通常被既有 Web 服务（nginx）占用 —— 用 nginx 反向代理（推荐，见 <a href="../nginx/">nginx.md</a>）。</li>

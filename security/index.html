@@ -959,7 +959,7 @@
 
 
 <h1 id="_1">安全说明<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p>relaydrop 是一个实现，目标是提供一套基于中继的加密文件转发。下面说明加密模型与安全取舍。</p>
+<p>RelayDrop 是一个实现，目标是提供一套基于中继的加密文件转发。下面说明加密模型与安全取舍。</p>
 <h2 id="_2">密钥模型<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <p>两把独立密钥（见 <code>src/crypto.rs</code>）：</p>
 <ul>
@@ -984,7 +984,7 @@
 <h2 id="_4">使用建议<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>使用高熵 <code>--code</code></strong>：<code>file_key</code> 直接由它派生，弱口令（如 <code>1234</code>）可被离线暴力。
-   建议用长随机串，例如 <code>relaydrop</code> 可后续支持口令生成器（当前请自行生成）。</li>
+   建议用长随机串，例如 <code>RelayDrop</code> 可后续支持口令生成器（当前请自行生成）。</li>
 <li><strong>中继口令 <code>--password</code> 与 <code>--code</code> 不同且足够强</strong>：前者用于客户端 ↔ 中继鉴权。
    <strong>优先用环境变量 <code>RELAYDROP_PASSWORD</code> 提供口令</strong>（见 <a href="../usage/">usage.md</a> 的「环境变量」小节），
    不要写进命令行——命令行参数会出现在 shell 历史与 <code>/proc/&lt;pid&gt;/cmdline</code>，同机其他用户可读到。</li>

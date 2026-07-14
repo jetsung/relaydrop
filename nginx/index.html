@@ -1012,7 +1012,7 @@
 <ol>
 <li><strong><code>Upgrade</code> / <code>Connection</code> 头</strong>：WebSocket 握手必须透传，否则连接会在升级阶段失败。</li>
 <li><strong><code>proxy_read_timeout</code></strong>：文件传输可能长时间无应用层「心跳」之外的数据；设为 1 小时级，避免 nginx 提前断连。
-   （relaydrop 的 <code>WsFramed</code> 也会每 30s 发 WebSocket Ping，进一步保活。）</li>
+   （RelayDrop 的 <code>WsFramed</code> 也会每 30s 发 WebSocket Ping，进一步保活。）</li>
 <li><strong>路径一致</strong>：客户端 <code>--relay</code> 必须包含 <code>/relay</code>，即 <code>wss://relay.example.com/relay</code>。</li>
 <li><strong>证书</strong>：用 Cloudflare 控制台签发的 <strong>Origin Certificate</strong>（对其 Authenticated Origin Pulls 友好），
    或使用 Let's Encrypt（需 nginx 能访问 80 做验证，可临时开放）。</li>

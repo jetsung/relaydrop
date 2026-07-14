@@ -981,7 +981,7 @@
 
 
 <h1 id="cloudflare">Cloudflare 侧配置<a class="headerlink" href="#cloudflare" title="Permanent link">&para;</a></h1>
-<p>relaydrop 经 Cloudflare 暴露中继的核心，是让 WebSocket 流量走 Cloudflare 边缘。
+<p>RelayDrop 经 Cloudflare 暴露中继的核心，是让 WebSocket 流量走 Cloudflare 边缘。
 以下以 <code>relay.example.com</code> 为例。</p>
 <h2 id="_1">步骤<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <h3 id="1">1. 添加站点并解析<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
@@ -1010,7 +1010,7 @@
 <p>Cloudflare 免费版原生代理 HTTPS/WebSocket（端口 443），无需特殊开关。
 注意事项：</p>
 <ul>
-<li><strong>空闲超时</strong>：Cloudflare 对 WebSocket 约有 <strong>100 秒</strong> 无数据的空闲超时。relaydrop 的 <code>WsFramed</code>
+<li><strong>空闲超时</strong>：Cloudflare 对 WebSocket 约有 <strong>100 秒</strong> 无数据的空闲超时。RelayDrop 的 <code>WsFramed</code>
   每 30 秒发送 WebSocket Ping 保活；在配对等待阶段也能维持连接。</li>
 <li><strong>大文件</strong>：持续的数据流不会触发空闲超时；分块（64KB）持续发送即可。</li>
 </ul>

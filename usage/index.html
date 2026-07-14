@@ -1132,7 +1132,7 @@
 <li><strong><code>relay room is full</code></strong>：同一 <code>--code</code> 已有两人在房间。换一个 <code>--code</code> 或等待房间超时（默认 300s）。</li>
 <li><strong><code>integrity check failed</code></strong>：文件损坏或 <code>--code</code> 不一致导致密钥不同。确认两端 <code>--code</code> 完全一致。</li>
 <li><strong>连接被拒绝 / TLS 错误</strong>：检查 <code>--relay</code> 域名与前端证书状态（见 <a href="../nginx/">nginx.md</a> / <a href="../cloudflare/">cloudflare.md</a>）。</li>
-<li><strong>relaydrop 与其他 relay 工具能互通吗？</strong>：<strong>不能</strong>。relaydrop 是独立的实现，线协议、口令/密钥模型（<code>HKDF</code> 直接派生，无 PAKE）均不同。发送方与接收方<strong>必须都用 relaydrop</strong>。</li>
+<li><strong>RelayDrop 与其他 relay 工具能互通吗？</strong>：<strong>不能</strong>。RelayDrop 是独立的实现，线协议、口令/密钥模型（<code>HKDF</code> 直接派生，无 PAKE）均不同。发送方与接收方<strong>必须都用 relaydrop</strong>。</li>
 <li><strong>支持多大的文件？</strong>：单文件/文件夹总大小仅受磁盘与中继内存限制；传输按 64KB 分块流式进行，不会整文件入内存。没有单文件大小上限（远超 GB 亦可，只要两端磁盘足够）。</li>
 <li><strong>支持断点续传 / 压缩 / 多对多吗？</strong>：<strong>均不支持</strong>。一次传输为单房间、单发送方对单接收方、整文件重传；中断需重新发起。需要这些能力属后续增强范围。</li>
 <li><strong>为什么要用 <code>wss://</code>？</strong> 当客户端与中继之间存在 TLS 终结层（反向代理 / 隧道）时，<code>wss://</code> 让客户端经该层访问中继；若中继本身可达，用 <code>tcp://</code>/<code>ws://</code> 直连即可，无需 TLS 层。</li>
