@@ -1,6 +1,6 @@
 # 线协议与加密（开发者向）
 
-本文面向想理解或修改 relaydrop 传输层/加密层的开发者。所有描述以源码为准：
+本文面向想理解或修改 RelayDrop 传输层/加密层的开发者。所有描述以源码为准：
 
 - 帧抽象与 `Msg` 枚举：`src/framed.rs`
 - 密钥派生与 AES-GCM 信封：`src/crypto.rs`
@@ -9,7 +9,7 @@
 
 ## 1. 整体模型
 
-relaydrop 采用「**中继房间配对 + 双向字节管道**」的核心模型。
+RelayDrop 采用「**中继房间配对 + 双向字节管道**」的核心模型。
 
 ```
  sender ──(FramedStream)──► relay room ◄──(FramedStream)──► receiver
@@ -114,7 +114,7 @@ pub struct FileEntry {
 
 ## 6. 关于 PAKE（口令认证密钥交换）
 
-relaydrop **省略了 PAKE**，直接由共享口令 `room_code` 派生 `file_key`。这意味着：
+RelayDrop **省略了 PAKE**，直接由共享口令 `room_code` 派生 `file_key`。这意味着：
 
 - 若中继（你的 VPS）同时知道 `room_code`，它**理论上能解密文件**。
 - **假设中继可信**（它是你自己的 VPS）。在此前提下，简化是安全的，且实现更简单。

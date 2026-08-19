@@ -89,7 +89,7 @@ relaydrop receive --relay wss://<random>.trycloudflare.com --code MYCODE --passw
 
 - **`ws://` 前缀**：`ingress` 的 `service` 写成 `ws://127.0.0.1:9090`，cloudflared 会透明代理 WebSocket；
   不要写成 `http://`（虽也能升级，但 `ws://` 语义更明确）。
-- **空闲超时**：Cloudflare 对 WebSocket 约 100s 无数据会断；relaydrop 的 `WsFramed` 每 30s 发 Ping 保活，
+- **空闲超时**：Cloudflare 对 WebSocket 约 100s 无数据会断；RelayDrop 的 `WsFramed` 每 30s 发 Ping 保活，
   配对等待与长传输都不会触发空闲断开。
 - **客户端 `--relay` 不含 `/relay` 路径**：cloudflared 按 `hostname` 路由（不像 nginx 用 `location /relay`），
   所以直接写 `wss://relay.example.com` 即可。
@@ -109,4 +109,4 @@ relaydrop receive --relay wss://<random>.trycloudflare.com --code MYCODE --passw
 | 运维 | 维护 nginx 配置 | 维护 cloudflared + 隧道凭据 |
 | 适用 | 443 已被 nginx 占用时复用 | 不想动 nginx / 无开放端口时 |
 
-两种方式对 relaydrop 而言**等价**：客户端都通过 `wss://` 经 Cloudflare 边缘连到本地明文中继。
+两种方式对 RelayDrop 而言**等价**：客户端都通过 `wss://` 经 Cloudflare 边缘连到本地明文中继。

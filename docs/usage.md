@@ -139,7 +139,7 @@ relaydrop receive --relay wss://relay.example.com --code <随机> --password SEC
 - **`relay room is full`**：同一 `--code` 已有两人在房间。换一个 `--code` 或等待房间超时（默认 300s）。
 - **`integrity check failed`**：文件损坏或 `--code` 不一致导致密钥不同。确认两端 `--code` 完全一致。
 - **连接被拒绝 / TLS 错误**：检查 `--relay` 域名与前端证书状态（见 [nginx.md](nginx.md) / [cloudflare.md](cloudflare.md)）。
-- **relaydrop 与其他 relay 工具能互通吗？**：**不能**。relaydrop 是独立的实现，线协议、口令/密钥模型（`HKDF` 直接派生，无 PAKE）均不同。发送方与接收方**必须都用 relaydrop**。
+- **RelayDrop 与其他 relay 工具能互通吗？**：**不能**。RelayDrop 是独立的实现，线协议、口令/密钥模型（`HKDF` 直接派生，无 PAKE）均不同。发送方与接收方**必须都用 relaydrop**。
 - **支持多大的文件？**：单文件/文件夹总大小仅受磁盘与中继内存限制；传输按 64KB 分块流式进行，不会整文件入内存。没有单文件大小上限（远超 GB 亦可，只要两端磁盘足够）。
 - **支持断点续传 / 压缩 / 多对多吗？**：**均不支持**。一次传输为单房间、单发送方对单接收方、整文件重传；中断需重新发起。需要这些能力属后续增强范围。
 - **为什么要用 `wss://`？** 当客户端与中继之间存在 TLS 终结层（反向代理 / 隧道）时，`wss://` 让客户端经该层访问中继；若中继本身可达，用 `tcp://`/`ws://` 直连即可，无需 TLS 层。

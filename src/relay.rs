@@ -44,7 +44,7 @@ impl Relay {
     /// connections on the same port (see [`crate::framed::wrap_incoming`]).
     pub async fn run(&self, listen: &str) -> anyhow::Result<()> {
         let listener = TcpListener::bind(listen).await?;
-        eprintln!("relaydrop relay listening on {listen}");
+        eprintln!("RelayDrop relay listening on {listen}");
         self.spawn_cleanup();
         loop {
             let (stream, _addr) = listener.accept().await?;

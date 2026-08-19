@@ -1,4 +1,4 @@
-//! relaydrop: a minimal encrypted file relay over a WebSocket/TLS
+//! RelayDrop: a minimal encrypted file relay over a WebSocket/TLS
 //! relay transport, written in Rust.
 //!
 //! Subcommands:
@@ -17,7 +17,7 @@ use clap::{Parser, Subcommand};
 use rustls::crypto::ring;
 
 #[derive(Parser)]
-#[command(name = "relaydrop", version, about = "Minimal encrypted file relay over WebSocket/TLS, written in Rust")]
+#[command(name = "relaydrop", version, about = "RelayDrop: a minimal encrypted file relay over WebSocket/TLS, written in Rust")]
 struct Cli {
     #[command(subcommand)]
     cmd: Cmd,

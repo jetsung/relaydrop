@@ -1,6 +1,6 @@
 # 环境变量
 
-relaydrop 的所有命令行参数也都可以通过环境变量设置。变量名为 `RELAYDROP_` 前缀 + 参数长名大写，例如 `RELAYDROP_RELAY`、`RELAYDROP_PASSWORD`。本文是环境变量的**唯一事实来源**；Docker 与 compose 部署见 [docker.md](docker.md)，客户端完整用法见 [usage.md](usage.md)。
+RelayDrop 的所有命令行参数也都可以通过环境变量设置。变量名为 `RELAYDROP_` 前缀 + 参数长名大写，例如 `RELAYDROP_RELAY`、`RELAYDROP_PASSWORD`。本文是环境变量的**唯一事实来源**；Docker 与 compose 部署见 [docker.md](docker.md)，客户端完整用法见 [usage.md](usage.md)。
 
 ## 变量表
 

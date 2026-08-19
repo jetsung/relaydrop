@@ -1,6 +1,6 @@
 # 安装与部署中继
 
-本文说明如何在 VPS 上部署 relaydrop 中继，并提供三种部署方式。
+本文说明如何在 VPS 上部署 RelayDrop 中继，并提供三种部署方式。
 
 ## 构建 / 获取二进制
 
@@ -15,7 +15,7 @@ cargo build --release
 
 ## 中继的端口与证书策略
 
-relaydrop 的中继 **只监听一个 TCP 端口，使用明文 WebSocket（或裸 TCP）**，本身不处理 TLS、不占用 443。
+RelayDrop 的中继 **只监听一个 TCP 端口，使用明文 WebSocket（或裸 TCP）**，本身不处理 TLS、不占用 443。
 TLS 终结由前端组件负责：
 
 - VPS 的 443/80 通常被既有 Web 服务（nginx）占用 —— 用 nginx 反向代理（推荐，见 [nginx.md](nginx.md)）。

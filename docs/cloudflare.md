@@ -1,6 +1,6 @@
 # Cloudflare 侧配置
 
-relaydrop 经 Cloudflare 暴露中继的核心，是让 WebSocket 流量走 Cloudflare 边缘。
+RelayDrop 经 Cloudflare 暴露中继的核心，是让 WebSocket 流量走 Cloudflare 边缘。
 以下以 `relay.example.com` 为例。
 
 ## 步骤
@@ -36,7 +36,7 @@ relaydrop 经 Cloudflare 暴露中继的核心，是让 WebSocket 流量走 Clou
 Cloudflare 免费版原生代理 HTTPS/WebSocket（端口 443），无需特殊开关。
 注意事项：
 
-- **空闲超时**：Cloudflare 对 WebSocket 约有 **100 秒** 无数据的空闲超时。relaydrop 的 `WsFramed`
+- **空闲超时**：Cloudflare 对 WebSocket 约有 **100 秒** 无数据的空闲超时。RelayDrop 的 `WsFramed`
   每 30 秒发送 WebSocket Ping 保活；在配对等待阶段也能维持连接。
 - **大文件**：持续的数据流不会触发空闲超时；分块（64KB）持续发送即可。
 

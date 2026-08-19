@@ -77,7 +77,7 @@ nginx -t && systemctl reload nginx
 
 1. **`Upgrade` / `Connection` 头**：WebSocket 握手必须透传，否则连接会在升级阶段失败。
 2. **`proxy_read_timeout`**：文件传输可能长时间无应用层「心跳」之外的数据；设为 1 小时级，避免 nginx 提前断连。
-   （relaydrop 的 `WsFramed` 也会每 30s 发 WebSocket Ping，进一步保活。）
+   （RelayDrop 的 `WsFramed` 也会每 30s 发 WebSocket Ping，进一步保活。）
 3. **路径一致**：客户端 `--relay` 必须包含 `/relay`，即 `wss://relay.example.com/relay`。
 4. **证书**：用 Cloudflare 控制台签发的 **Origin Certificate**（对其 Authenticated Origin Pulls 友好），
    或使用 Let's Encrypt（需 nginx 能访问 80 做验证，可临时开放）。
