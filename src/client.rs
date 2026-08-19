@@ -69,10 +69,17 @@ async fn connect(
 }
 
 /// A random, URL-safe shared secret / relay password.
+/// The first character must not be `-` so the printed `--code` argument
+/// is never mistaken for a flag by the shell.
 fn random_secret() -> String {
-    let mut b = [0u8; 18];
-    rand::rng().fill_bytes(&mut b);
-    base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(b)
+    loop {
+        let mut b = [0u8; 18];
+        rand::rng().fill_bytes(&mut b);
+        let s = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(b);
+        if !s.starts_with('-') {
+            return s;
+        }
+    }
 }
 
 /// Public sender entry. The `code` (transfer secret) is generated randomly
