@@ -24,6 +24,22 @@
 
 > 注：用「由共享口令派生密钥」而非完整的 PAKE（口令认证密钥交换）；两端本就输入同一共享口令，故可直接派生。安全权衡见 [docs/security.md](./security.md)。
 
+## 安装
+
+```bash
+# 一键安装脚本（Linux / macOS，自动识别架构）
+curl -fsSL https://relaydrop.gcli.cn/install.sh | bash
+
+# 从 crates.io 安装
+cargo install relaydrop
+
+# 或从 Git 仓库安装
+cargo install --git https://github.com/jetsung/relaydrop.git
+```
+
+或从源码构建：`cargo build --release`（产物在 `target/release/relaydrop`）。
+三种安装方式详见 [docs/install.md](./install.md)。
+
 ## 构建
 
 ```bash

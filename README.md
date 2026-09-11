@@ -24,6 +24,28 @@
 
 > 注：用「由共享口令派生密钥」而非完整的 PAKE（口令认证密钥交换）；两端本就输入同一共享口令，故可直接派生。安全权衡见 [docs/security.md](docs/security.md)。
 
+## 安装
+
+```bash
+# 一键安装脚本（Linux / macOS，自动识别架构）
+curl -fsSL https://relaydrop.gcli.cn/install.sh | bash
+
+# 从 crates.io 安装
+cargo install relaydrop
+
+# 或从 Git 仓库安装
+cargo install --git https://github.com/jetsung/relaydrop.git
+```
+
+或从源码构建：`cargo build --release`（产物在 `target/release/relaydrop`）。
+
+一键安装说明：
+
+- root 用户安装到 `/usr/local/bin`，普通用户安装到 `~/.local/bin`（确保其在 `PATH` 中）。
+- 中国网络环境自动走 CDN 加速；也可手动指定 `CN=1` 强制启用。
+- 自定义下载地址：`curl -fsSL https://relaydrop.gcli.cn/install.sh | URL=<下载地址> bash`（或 `--url <地址>`）。
+- 预构建资产命名规则：`relaydrop-v<版本>-{arch}-{vendor}-{os}.tar.xz`，支持 `x86_64` / `aarch64` / `loongarch64`，Linux（gnu/musl）与 macOS（darwin）；Windows 为 `zip` 包。
+
 ## 构建
 
 ```bash

@@ -199,3 +199,36 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-crates:
+    # 仅 tag 推送时发布；workflow_dispatch / release 事件不重复发布（版本已在 crates.io 存在，会报错）
+    if: ${{ github.event_name == 'push' }}
+    needs: [create-release]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check CARGO_REGISTRY_TOKEN
+        id: check-token
+        env:
+          TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "has_token=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_token=false" >> $GITHUB_OUTPUT
+            echo "::warning::CARGO_REGISTRY_TOKEN is not set, skipping crates.io publish"
+          fi
+      - uses: actions/checkout@v7
+        if: steps.check-token.outputs.has_token == 'true'
+        with:
+          # crates.io 发布必须使用 tag 对应的源码（Cargo.toml 中的版本号需与发布版本一致）
+          ref: ${{ github.ref }}
+      - name: Update Rust
+        if: steps.check-token.outputs.has_token == 'true'
+        run: |
+          rustup update
+          rustc --version
+      - name: Publish to crates.io
+        if: steps.check-token.outputs.has_token == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p relaydrop

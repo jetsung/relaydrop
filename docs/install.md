@@ -2,7 +2,32 @@
 
 本文说明如何在 VPS 上部署 RelayDrop 中继，并提供三种部署方式。
 
-## 构建 / 获取二进制
+## 安装
+
+### 一键安装脚本（推荐）
+
+Linux / macOS 可直接用一键安装脚本，自动识别架构并从 GitHub Releases 下载预构建二进制：
+
+```bash
+curl -fsSL https://relaydrop.gcli.cn/install.sh | bash
+```
+
+- root 用户安装到 `/usr/local/bin`，普通用户安装到 `~/.local/bin`（确保其在 `PATH` 中）。
+- 中国网络环境自动走 CDN 加速；也可手动指定 `CN=1` 强制启用。
+- 自定义下载地址：`curl -fsSL https://relaydrop.gcli.cn/install.sh | URL=<下载地址> bash`（或 `--url <地址>`）。
+- 支持 `x86_64` / `aarch64` / `loongarch64`，Linux（gnu/musl）与 macOS（darwin）；Windows 下载 `zip` 包解压即可。
+
+### cargo install（推荐）
+
+```bash
+# 从 crates.io 安装
+cargo install relaydrop
+
+# 或从 Git 仓库安装
+cargo install --git https://github.com/jetsung/relaydrop.git
+```
+
+### 从源码构建
 
 在 VPS（或任意可编译的机器）上：
 
